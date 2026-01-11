@@ -207,13 +207,21 @@ public class ExcelHandler : IDisposable
     public void Save()
     {
         _workbook.Save();
-        Console.WriteLine("Attendance Register Saved");
-        Console.WriteLine("All Excel Files Closed");
+        // gets the filepath of the workbook which includes the name of the excel file
+        string workBookName = _workbook.ToString();
+        // gets the length of the string of the work book name, and -1, i don't want to print the last ) of the string
+        int workBookNameLength = workBookName.Length-1;
+        Console.WriteLine($"{workBookName[48..workBookNameLength]} File Closed");
     }
 
 // closes the excel file
     public void Dispose()
     {
+        // gets the filepath of the workbook which includes the name of the excel file
+        string workBookName = _workbook.ToString();
+        // gets the length of the string of the work book name, and -1, i don't want to print the last ) of the string
+        int workBookNameLength = workBookName.Length-1;
+        Console.WriteLine($"{workBookName[48..workBookNameLength]} File Closed");
         _workbook?.Dispose();
     }
 
