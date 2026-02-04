@@ -142,7 +142,7 @@ public class ExcelHandler : IDisposable
         {// if it is a number like 9 then it makes it 9:00
             timeString = timeString+":00";
         }
-        else if (timeString.Length == 3)
+        else if (timeString.Length == 3 || timeString.Length == 4)// if it is .5 then it makes it :30
         {
             timeString = timeString.Replace(",5",":30");
         }
@@ -174,7 +174,7 @@ public class ExcelHandler : IDisposable
     /// When a match is found, it writes the clock-out time to the matched column and the clock-in time three columns to the left on the computed date row.
     /// After all writes, the workbook is saved.
     /// </remarks>
-    public void NameSearch(
+    public void WriteToRoster(
         List<string> employees, 
         List<string> clockIns, 
         List<string> clockOuts,

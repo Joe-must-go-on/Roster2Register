@@ -76,7 +76,7 @@ using (ExcelHandler registerWorkBook = new ExcelHandler(RegisterFilePath, 1)){
                     {
                         employees[index] = "Reolebogile";
                     }
-                    registerWorkBook.NameSearch(employees, clockIns, clockOuts, dayOfMonth);
+                    registerWorkBook.WriteToRoster(employees, clockIns, clockOuts, dayOfMonth);
                 }
                 else
                 {
