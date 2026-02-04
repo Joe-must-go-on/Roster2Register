@@ -80,6 +80,7 @@ using (ExcelHandler registerWorkBook = new ExcelHandler(RegisterFilePath, 1)){
             }
         }
     }
+    
     registerWorkBook.Save();
 }
 

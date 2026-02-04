@@ -29,8 +29,17 @@ public class ExcelHandler : IDisposable
     {
         // opens the excel file
         _workbook = new XLWorkbook(filePath);
+
+        DateTime previousMonthDate = DateTime.Now.AddMonths(-1);
+
+        // Get the full name of the month using the "MMMM" format specifier
+        string previousMonthName = previousMonthDate.ToString("MMMM");
+
+        var draftWorksheet = _workbook.Worksheet("Draft");
+        draftWorksheet.Cell(row:2, column: "L").Value = previousMonthName;
         // worksheet used in attendance register excel file
         var attendanceWorkSheet = _workbook.Worksheet("Register");
+        
     }
 
     /// <summary>
