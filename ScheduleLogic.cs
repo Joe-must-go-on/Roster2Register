@@ -17,7 +17,6 @@ public class ExcelHandler : IDisposable
     public int[] hourList = { 11, 12, 13, 14, 15 };
     public int[] minuteList = { 0, 15, 30, 45 };
     public Random rng = new Random();
-    public Random randomMinuteNum = new Random();
     public ExcelHandler(string filePath)
     {
         // opens the excel file
@@ -147,7 +146,7 @@ public class ExcelHandler : IDisposable
             timeString = timeString.Replace(",5",":30");
         }
         //makes sure that the number has something like ,75 at the end
-        else if(timeString.Length > 3)
+        if(timeString.Length > 3)
         {
             timeString = timeString.Replace(",",":");
             if (timeString[2..4] == "75")
@@ -179,6 +178,7 @@ public class ExcelHandler : IDisposable
         List<string> clockIns, 
         List<string> clockOuts,
         string dayNum)
+
     {
         var workSheet = _workbook.Worksheet("Register");// hardcoded because it will always be this worksheet
         int row = 2;//employee names in the attendance register in is row 2
@@ -212,8 +212,40 @@ public class ExcelHandler : IDisposable
                     dateRow +=4;
                     workSheet.Cell(row: dateRow, column: clockOutCol).Value = clockOutTime;
                     workSheet.Cell(row: dateRow, column: clockInCol).Value = clockInTime;
-                    workSheet.Cell(row: dateRow, column: lunchStartCol).Value = lunchStart.ToString("HH:mm");
-                    workSheet.Cell(row: dateRow, column: lunchEndCol).Value = lunchEnd.ToString("HH:mm");
+
+                    TimeOnly startTime = TimeOnly.Parse(clockInTime);//convert to timeOnly so that i can get a timespan
+                    TimeOnly endTime = TimeOnly.Parse(clockOutTime);
+                    TimeSpan shiftHours = endTime - startTime;
+                    bool isLunchHoursValid = false;
+
+                    // makes sure that the lunch hours are only added if the shift is more than 5
+                    if (shiftHours.TotalHours > 5)
+                    {
+                        while (!isLunchHoursValid)// make sure that lunch hours fits in between shift hours
+                        {
+                            if (startTime < lunchStart && endTime > lunchEnd)
+                            {
+                                isLunchHoursValid = true;
+
+                            }
+                            else if (startTime >= lunchStart)
+                            {
+                                lunchStart = lunchStart.AddMinutes(30);
+                                lunchEnd = lunchEnd.AddMinutes(30);
+                            }
+                            else if (endTime <= lunchEnd)
+                            {
+                                lunchStart = lunchStart.AddMinutes(-30);
+                                lunchEnd = lunchEnd.AddMinutes(-30);
+                            }
+
+                        }
+                        workSheet.Cell(row: dateRow, column: lunchStartCol).Value = lunchStart.ToString("HH:mm");
+                        workSheet.Cell(row: dateRow, column: lunchEndCol).Value = lunchEnd.ToString("HH:mm");
+                    }
+                    
+
+                    
                 }
             }
         }

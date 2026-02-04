@@ -39,11 +39,6 @@ string[] scheduleWorkSheets =
 };
 
 
-//hour list = [11,12,13,14,15]
-//minute list = [00,15,30,45]
-// create a timeonly object from the hour and minute lists, then instert into lunch start, then +30minutes for lunch end
-
-
 
 using (ExcelHandler registerWorkBook = new ExcelHandler(RegisterFilePath, 1)){
     using (ExcelHandler ScheduleWorkBook = new ExcelHandler(ScheduleFilePath))
@@ -88,4 +83,9 @@ using (ExcelHandler registerWorkBook = new ExcelHandler(RegisterFilePath, 1)){
     registerWorkBook.Save();
 }
 
+//go through the roster file and make sure all the lunch times fit within the shift times
+//how to iterate only through clock in and clock out columns?
+//if clock in < lunch start < lunch end < clock out then its valid
+//if not then adjust lunch times to fit within shift times
+//if clock out - clock in < 5 hours then no lunch break
 
