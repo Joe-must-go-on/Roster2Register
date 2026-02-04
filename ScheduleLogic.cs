@@ -13,6 +13,11 @@ public class ExcelHandler : IDisposable
     //Class field that we can use in the methods of this class to manipulate the excel files
     //private means only this class can access it, readonly means it can only be assigned in the constructor
     private readonly XLWorkbook _workbook;
+    // making a list of hours and minutes, will use it to create lunche times for the register
+    public int[] hourList = { 11, 12, 13, 14, 15 };
+    public int[] minuteList = { 0, 15, 30, 45 };
+    public Random rng = new Random();
+    public Random randomMinuteNum = new Random();
     public ExcelHandler(string filePath)
     {
         // opens the excel file
@@ -189,16 +194,26 @@ public class ExcelHandler : IDisposable
                 string employeeName = employees[i];
                 string clockOutTime = clockOuts[i];
                 string clockInTime = clockIns[i];
+                int hourIndex = rng.Next(0, hourList.Length);//generates a number to use as an index for the hour list
+                int hour = hourList[hourIndex];// gets the hour from the hour list
+                int minuteIndex = rng.Next(0, minuteList.Length);// generates a number to use as an index for the minute list
+                int minute = minuteList[minuteIndex];// gets the minute from the minute list
+                TimeOnly lunchStart = new TimeOnly(hour,minute);
+                TimeOnly lunchEnd = lunchStart.AddMinutes(30);
                 if (cellValue.Contains(employeeName))
                 {
                     int clockOutCol = col;
                     int clockInCol = col-3;
+                    int lunchStartCol = col-2;
+                    int lunchEndCol = col-1;
                     int dateRow = int.Parse(dayNum);
                     // the row where the dates are 4 more than what the date actually is
                     // day 1 is row 5, day 10 is row 14
                     dateRow +=4;
                     workSheet.Cell(row: dateRow, column: clockOutCol).Value = clockOutTime;
                     workSheet.Cell(row: dateRow, column: clockInCol).Value = clockInTime;
+                    workSheet.Cell(row: dateRow, column: lunchStartCol).Value = lunchStart.ToString("HH:mm");
+                    workSheet.Cell(row: dateRow, column: lunchEndCol).Value = lunchEnd.ToString("HH:mm");
                 }
             }
         }
@@ -211,7 +226,7 @@ public class ExcelHandler : IDisposable
         string workBookName = _workbook.ToString();
         // gets the length of the string of the work book name, and -1, i don't want to print the last ) of the string
         int workBookNameLength = workBookName.Length-1;
-        Console.WriteLine($"{workBookName[48..workBookNameLength]} File Closed");
+        Console.WriteLine($"{workBookName[48..workBookNameLength]} File Saved");
     }
 
 // closes the excel file
