@@ -84,9 +84,5 @@ using (ExcelHandler registerWorkBook = new ExcelHandler(RegisterFilePath, 1)){
     registerWorkBook.Save();
 }
 
-//go through the roster file and make sure all the lunch times fit within the shift times
-//how to iterate only through clock in and clock out columns?
-//if clock in < lunch start < lunch end < clock out then its valid
-//if not then adjust lunch times to fit within shift times
-//if clock out - clock in < 5 hours then no lunch break
+Console.ReadKey();
 
