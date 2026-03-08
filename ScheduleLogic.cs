@@ -143,30 +143,9 @@ public class ExcelHandler : IDisposable
     /// </remarks>
     public string FormatTime(double time)
     {
-        //converts the double to string
-        string timeString = time.ToString();
-        //make sure that the string doesn't have ,75 or something at the end
-        if (timeString.Length < 3)
-        {// if it is a number like 9 then it makes it 9:00
-            timeString = timeString+":00";
-        }
-        else if (timeString.Length == 3 || timeString.Length == 4)// if it is .5 then it makes it :30
-        {
-            timeString = timeString.Replace(",5",":30");
-        }
-        //makes sure that the number has something like ,75 at the end
-        if(timeString.Length > 3)
-        {
-            timeString = timeString.Replace(",",":");
-            if (timeString[2..4] == "75")
-            {
-                timeString = timeString.Replace("75","45");
-            }
-            else if (timeString[2..4] == "25")
-            {
-                timeString = timeString.Replace("25","15");
-            }
-        }
+        var timeChange = TimeSpan.FromHours(time);
+        string timeString = timeChange.ToString(@"h\:mm");
+
         return timeString;
     }
 
